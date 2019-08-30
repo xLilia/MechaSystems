@@ -54,3 +54,34 @@ void AVerticalCamera::ZoomOutSpringArm(float val, float mult, USpringArmComponen
 	SpringArm->TargetArmLength -= val * mult;
 }
 
+void AVerticalCamera::SetTarget(AActor* Target)
+{
+	FVector OffsetLoc = Target->GetActorTransform().GetLocation() - this->GetActorTransform().GetLocation();
+	this->AddActorWorldTransform(FTransform(OffsetLoc));
+}
+
+void AVerticalCamera::SelectMechaBody(AMechaBody* Mecha)
+{
+	SelectedMecha = Mecha;
+	if (Mecha == nullptr) return;
+	if (SelectedMecha->MechaComponentsList.Num() == 0)return;
+	SetTarget(Mecha->MechaComponentsList[0]->GetOwner());
+	SelectedMechaComponentID = 0;
+}
+
+void AVerticalCamera::SelectMechaComponentID(int32 ID)
+{
+	if (SelectedMecha == nullptr) return;
+	if (SelectedMecha->MechaComponentsList.Num() == 0)return;
+	SetTarget(SelectedMecha->MechaComponentsList[ID]->GetOwner());
+	SelectedMechaComponentID = ID;
+}
+
+void AVerticalCamera::ScrollMechaComponentID(int32 num)
+{
+	if (SelectedMecha == nullptr) return;
+	if (SelectedMecha->MechaComponentsList.Num() == 0)return;
+	int32 max = SelectedMecha->MechaComponentsList.Num();
+	SelectMechaComponentID((SelectedMechaComponentID + num) % max);
+}
+
