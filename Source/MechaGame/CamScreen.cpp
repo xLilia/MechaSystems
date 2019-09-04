@@ -33,7 +33,7 @@ void UCamScreen::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 
 void UCamScreen::Init(FVector2D Resolution, USceneCaptureComponent2D* RenderTarget, UPrimitiveComponent* ScreenSurface)
 {
-	if (RenderTarget == nullptr || ScreenSurface == nullptr) return;
+	if (RenderTarget == nullptr || ScreenSurface == nullptr || RenderTargetMaterial == nullptr) return;
 	RenderTarget->TextureTarget = UKismetRenderingLibrary::CreateRenderTarget2D(this, Resolution.X, Resolution.Y);
 	RenderTargetMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(this, RenderTargetMaterial);
 	RenderTargetMaterialInstance->SetTextureParameterValue("CustomRenderTarget", RenderTarget->TextureTarget);

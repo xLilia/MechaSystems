@@ -6,8 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include "MechaComponent.h"
 #include "MechaBody.h"
+#include "MechaComponent.h"
 #include "VerticalCamera.generated.h"
 
 UCLASS()
@@ -46,18 +46,21 @@ public:
 		void PitchCamera(float val, float mult);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Movement")
-		void ZoomOutSpringArm(float val, float mult, USpringArmComponent* SpringArm);
+		void ZoomOutSpringArm(float val, float mult, class USpringArmComponent* SpringArm);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Movement")
-		void SetTarget(AActor* Target);
+		class AActor* SetTarget(AActor* Target);
+
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Movement")
+		class AActor* AlignWithTarget(AActor* Target, FVector mult);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
-		void SelectMechaBody(class AMechaBody* Mecha);
+		class AMechaBody* SelectMechaBody(class AMechaBody* Mecha);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
-		void SelectMechaComponentID(int32 ID);
+		class UMechaComponent* SelectMechaComponentID(int32 ID);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
-		void ScrollMechaComponentID(int32 num);
+		class UMechaComponent* ScrollMechaComponentID(int32 num);
 
 };

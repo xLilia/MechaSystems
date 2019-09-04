@@ -16,7 +16,7 @@ public:
 	// Sets default values for this pawn's properties
 	AMechaBody();
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, Category="MechaBody/Components")
 		TArray<class UMechaComponent*> MechaComponentsList;
 
 protected:
