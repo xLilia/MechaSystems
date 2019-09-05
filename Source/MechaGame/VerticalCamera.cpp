@@ -63,14 +63,12 @@ AActor* AVerticalCamera::SetTarget(AActor* Target)
 	return Target;
 }
 
-
 void AVerticalCamera::SetTargetByPos(FVector Target)
 {
 	FVector OffsetLoc = Target - this->GetActorTransform().GetLocation();
 	this->AddActorWorldTransform(FTransform(OffsetLoc));
 	return;
 }
-
 
 AActor* AVerticalCamera::AlignWithTarget(AActor* Target, FVector mult = FVector(1,1,1))
 {
@@ -83,7 +81,6 @@ AActor* AVerticalCamera::AlignWithTarget(AActor* Target, FVector mult = FVector(
 	this->SetActorRotation(rot);
 	return Target;
 }
-
 
 AMechaBody* AVerticalCamera::SelectMechaBody(AMechaBody* Mecha)
 {
@@ -113,7 +110,8 @@ UMechaComponent* AVerticalCamera::ScrollMechaComponent(int32 num)
 
 UMechaSocket* AVerticalCamera::SelectMechaComponentSocketID(int32 ID)
 {
-	if (SelectedMecha == nullptr || SelectedMecha->MechaComponentsList[SelectedMechaComponentID] == nullptr || SelectedMecha->MechaComponentsList[SelectedMechaComponentID]->Sockets.Num() == 0) return nullptr;
+	if (SelectedMecha == nullptr || SelectedMecha->MechaComponentsList.Num() == 0) return nullptr;
+	if (SelectedMecha->MechaComponentsList[SelectedMechaComponentID] == nullptr || SelectedMecha->MechaComponentsList[SelectedMechaComponentID]->Sockets.Num() == 0) return nullptr;
 	UMechaSocket* MS = SelectedMecha->MechaComponentsList[SelectedMechaComponentID]->Sockets[ID];
 	SetTargetByPos(MS->GetComponentLocation());
 	SelectedMechaComponentSocketID = ID;
@@ -122,7 +120,8 @@ UMechaSocket* AVerticalCamera::SelectMechaComponentSocketID(int32 ID)
 
 UMechaSocket* AVerticalCamera::ScrollMechaComponentSocket(int32 num)
 {
-	if (SelectedMecha == nullptr || SelectedMecha->MechaComponentsList[SelectedMechaComponentID] == nullptr || SelectedMecha->MechaComponentsList[SelectedMechaComponentID]->Sockets.Num() == 0) return nullptr;
+	if (SelectedMecha == nullptr || SelectedMecha->MechaComponentsList.Num() == 0) return nullptr;
+	if (SelectedMecha->MechaComponentsList[SelectedMechaComponentID] == nullptr || SelectedMecha->MechaComponentsList[SelectedMechaComponentID]->Sockets.Num() == 0) return nullptr;
 	int32 max = SelectedMecha->MechaComponentsList[SelectedMechaComponentID]->Sockets.Num();
 	return SelectMechaComponentSocketID((SelectedMechaComponentSocketID + num) % max);
 }
