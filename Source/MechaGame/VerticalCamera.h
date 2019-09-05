@@ -22,8 +22,11 @@ public:
 	UPROPERTY(VisibleAnywhere, Category="VerticalCamera/Edit")
 		class AMechaBody* SelectedMecha;
 
-	UPROPERTY(VisibleAnywhere, Category = "VerticalCamera/Edit")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "VerticalCamera/Edit")
 		int32 SelectedMechaComponentID = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "VerticalCamera/Edit")
+		int32 SelectedMechaComponentSocketID = 0;
 
 protected:
 	// Called when the game starts or when spawned
@@ -50,6 +53,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Movement")
 		class AActor* SetTarget(AActor* Target);
+	
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Movement")
+		void SetTargetByPos(FVector Target);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Movement")
 		class AActor* AlignWithTarget(AActor* Target, FVector mult);
@@ -61,6 +67,12 @@ public:
 		class UMechaComponent* SelectMechaComponentID(int32 ID);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
-		class UMechaComponent* ScrollMechaComponentID(int32 num);
+		class UMechaComponent* ScrollMechaComponent(int32 num);
+
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
+		class UMechaSocket* SelectMechaComponentSocketID(int32 num);
+
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
+		class UMechaSocket* ScrollMechaComponentSocket(int32 num);
 
 };

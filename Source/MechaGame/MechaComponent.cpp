@@ -32,16 +32,29 @@ void UMechaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
+TArray<class UMechaSocket*> UMechaComponent::UpdateSockets()
+{
+	Sockets.Empty();
+	GetOwner()->GetComponents(Sockets);
+	//for (UMechaSocket* Comps : ChildCompList)
+	//{
+	//	.Add(Comps);
+	//}
+	return Sockets;
+}
+
 int UMechaComponent::Connect(UMechaComponent* Other, int32 ThisSocketID, int32 OtherSocketID)
 {
+	if (Other == nullptr) return -1;
 	if (this->Sockets[ThisSocketID]->Type == Other->Sockets[OtherSocketID]->Type) {
 		Other->Sockets[OtherSocketID]->Connection = this;
 		Other->Sockets[OtherSocketID]->ConnectionSocketID = ThisSocketID;
 		this->Sockets[ThisSocketID]->Connection = Other;
 		this->Sockets[ThisSocketID]->ConnectionSocketID = OtherSocketID;
-		return 0;
+
+		return 1;
 	}
-	return -1;
+	return 0;
 }
 
 int UMechaComponent::Disconnect(int32 socketID)

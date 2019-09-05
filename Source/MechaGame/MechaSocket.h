@@ -21,7 +21,7 @@ public:
 	UPROPERTY()
 		FString Type;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="MechaSocket")
 		class UMechaComponent* Connection;
 
 	UPROPERTY()
