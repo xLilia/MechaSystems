@@ -75,14 +75,4 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
 		class UMechaSocket* ScrollMechaComponentSocket(int32 num);
 
-	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
-		template<class c>
-		class c* InstantiateMechaComponent(class c* Component);
-
 };
-
-template<class c>
-inline c* AVerticalCamera::InstantiateMechaComponent(c* Component)
-{
-	return NULL;
-}

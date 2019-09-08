@@ -18,10 +18,13 @@ public:
 	// Sets default values for this component's properties
 	UMechaComponent();
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "MechaSockets")
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "MechaComponent")
 		TArray<class UMechaSocket*> Sockets;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "MechaComponent/MechaGraph")
+		int32 GraphLayer = 0;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "MechaComponent")
 		bool isSelected = false;
 protected:
 	// Called when the game starts
@@ -31,13 +34,17 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UFUNCTION(BlueprintCallable, Category = "MechaSockets")
+	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
 		TArray<class UMechaSocket*> UpdateSockets();
 
-	UFUNCTION(BlueprintCallable, Category="MechaSockets")
+	UFUNCTION(BlueprintCallable, Category="MechaComponent")
 		int Connect(UMechaComponent* Other, int32 ThisSocketID, int32 OtherSocketID);
 
-	UFUNCTION(BlueprintCallable, Category = "MechaSockets")
+	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
 		int Disconnect(int32 socketID);
-		
+
+	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
+		void InstantiateComponentAtSocket(UMechaComponent* Component, int32 socketID);
+
+
 };

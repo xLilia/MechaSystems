@@ -35,11 +35,13 @@ void UMechaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 TArray<class UMechaSocket*> UMechaComponent::UpdateSockets()
 {
 	Sockets.Empty();
-	GetOwner()->GetComponents(Sockets);
-	//for (UMechaSocket* Comps : ChildCompList)
-	//{
-	//	.Add(Comps);
-	//}
+	GetOwner()->GetComponents(Sockets, true);
+	int32 sID = 0;
+	for (UMechaSocket* Socket : Sockets)
+	{
+		Socket->SocketID = sID;
+		Socket->GraphLayerOffset = Socket->GraphLayer + this->GraphLayer;
+	}
 	return Sockets;
 }
 
@@ -51,7 +53,6 @@ int UMechaComponent::Connect(UMechaComponent* Other, int32 ThisSocketID, int32 O
 		Other->Sockets[OtherSocketID]->ConnectionSocketID = ThisSocketID;
 		this->Sockets[ThisSocketID]->Connection = Other;
 		this->Sockets[ThisSocketID]->ConnectionSocketID = OtherSocketID;
-
 		return 1;
 	}
 	return 0;
@@ -71,5 +72,11 @@ int UMechaComponent::Disconnect(int32 socketID)
 	else {
 		return -1;
 	}
+}
+
+void UMechaComponent::InstantiateComponentAtSocket(UMechaComponent* Component, int32 AtsocketID)
+{
+	
+	
 }
 

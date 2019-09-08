@@ -18,14 +18,26 @@ public:
 	UMechaSocket();
 	UMechaSocket(FString Type);
 
-	//UPROPERTY()
-	//	FString Type;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MechaSocket")
+		FString Type;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="MechaSocket")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="MechaSocket")
 		class UMechaComponent* Connection;
 
-	//UPROPERTY()
-	//	int32 ConnectionSocketID = -1;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MechaSocket")
+		int32 ConnectionSocketID = -1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MechaSocket")
+		int32 SocketID = -1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MechaSocket")
+		int32 GraphLayer = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MechaSocket")
+		int32 GraphLayerOffset = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MechaSocket")
+		FVector2D GraphPos2D;
 
 protected:
 	// Called when the game starts
@@ -34,6 +46,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
 
-		
 };
