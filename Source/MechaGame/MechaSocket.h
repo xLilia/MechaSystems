@@ -18,14 +18,15 @@ public:
 	UMechaSocket();
 	UMechaSocket(FString Type);
 
-	UPROPERTY()
-		FString Type;
+	//UPROPERTY()
+	//	FString Type;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="MechaSocket")
 		class UMechaComponent* Connection;
 
-	UPROPERTY()
-		int32 ConnectionSocketID = -1;
+	//UPROPERTY()
+	//	int32 ConnectionSocketID = -1;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
