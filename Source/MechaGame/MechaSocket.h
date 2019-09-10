@@ -28,7 +28,7 @@ public:
 		int32 ConnectionSocketID = -1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MechaSocket")
-		int32 SocketID = -1;
+		int32 ComponentSocketID = -1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MechaSocket")
 		int32 GraphLayer = 0;

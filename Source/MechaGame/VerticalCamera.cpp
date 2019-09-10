@@ -126,4 +126,15 @@ UMechaSocket* AVerticalCamera::ScrollMechaComponentSocket(int32 num)
 	return SelectMechaComponentSocketID((SelectedMechaComponentSocketID + num) % max);
 }
 
+int32 AVerticalCamera::InstallComponentAtSocket(UMechaComponent* newComponent, UMechaSocket* ComponentSocket)
+{
+	TArray<UMechaComponent*> mechaComp;
+	ComponentSocket->GetOwner()->GetComponents(mechaComp);
+	if (mechaComp.Num() != 1) return -2;
+	UMechaComponent* Component = mechaComp[0];
+	return Component->Connect(newComponent, ComponentSocket->ComponentSocketID, 0); //FLIP componentSide otherSktID
+}
+
+
+
 

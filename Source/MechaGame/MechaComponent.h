@@ -38,13 +38,10 @@ public:
 		TArray<class UMechaSocket*> UpdateSockets();
 
 	UFUNCTION(BlueprintCallable, Category="MechaComponent")
-		int Connect(UMechaComponent* Other, int32 ThisSocketID, int32 OtherSocketID);
+		int32 Connect(UMechaComponent* Other, int32 ThisSocketID, int32 OtherSocketID);
 
 	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
-		int Disconnect(int32 socketID);
-
-	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
-		void InstantiateComponentAtSocket(UMechaComponent* Component, int32 socketID);
+		int32 Disconnect(int32 socketID);
 
 
 };

@@ -75,4 +75,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
 		class UMechaSocket* ScrollMechaComponentSocket(int32 num);
 
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
+		int32 InstallComponentAtSocket(class UMechaComponent* newComponent, class UMechaSocket* ComponentSocket);
+
 };

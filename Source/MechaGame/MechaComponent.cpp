@@ -39,13 +39,13 @@ TArray<class UMechaSocket*> UMechaComponent::UpdateSockets()
 	int32 sID = 0;
 	for (UMechaSocket* Socket : Sockets)
 	{
-		Socket->SocketID = sID;
+		Socket->ComponentSocketID = sID;
 		Socket->GraphLayerOffset = Socket->GraphLayer + this->GraphLayer;
 	}
 	return Sockets;
 }
 
-int UMechaComponent::Connect(UMechaComponent* Other, int32 ThisSocketID, int32 OtherSocketID)
+int32 UMechaComponent::Connect(UMechaComponent* Other, int32 ThisSocketID, int32 OtherSocketID)
 {
 	if (Other == nullptr) return -1;
 	if (this->Sockets[ThisSocketID]->Type == Other->Sockets[OtherSocketID]->Type) {
@@ -58,25 +58,16 @@ int UMechaComponent::Connect(UMechaComponent* Other, int32 ThisSocketID, int32 O
 	return 0;
 }
 
-int UMechaComponent::Disconnect(int32 socketID)
+int32 UMechaComponent::Disconnect(int32 socketID)
 {
-	if (this->Sockets[socketID]->Connection == nullptr) {
-		return 0;
-	}
-	else if (this->Sockets[socketID]->Connection != nullptr) {
-		this->Sockets[socketID]->Connection->Disconnect(this->Sockets[socketID]->ConnectionSocketID);
-		this->Sockets[socketID]->ConnectionSocketID = -1;
-		this->Sockets[socketID]->Connection = nullptr;
-		return 1;
-	}
-	else {
-		return -1;
-	}
-}
+	if (this->Sockets.Num() == 0) return 0;
+	if (this->Sockets[socketID]->Connection == nullptr) return -1;
 
-void UMechaComponent::InstantiateComponentAtSocket(UMechaComponent* Component, int32 AtsocketID)
-{
-	
-	
-}
+	UMechaComponent* Con = *&this->Sockets[socketID]->Connection;
+	this->Sockets[socketID]->Connection = nullptr;
 
+	Con->Disconnect(this->Sockets[socketID]->ConnectionSocketID);
+	this->Sockets[socketID]->ConnectionSocketID = -1;
+
+	return 1;
+}
