@@ -62,12 +62,25 @@ int32 UMechaComponent::Disconnect(int32 socketID)
 {
 	if (this->Sockets.Num() == 0) return 0;
 	if (this->Sockets[socketID]->Connection == nullptr) return -1;
-
-	UMechaComponent* Con = *&this->Sockets[socketID]->Connection;
+	
+	UMechaComponent* Con = this->Sockets[socketID]->Connection;
 	this->Sockets[socketID]->Connection = nullptr;
-
-	Con->Disconnect(this->Sockets[socketID]->ConnectionSocketID);
 	this->Sockets[socketID]->ConnectionSocketID = -1;
-
+	if (this->Sockets[socketID]->Connection->Sockets[this->Sockets[socketID]->ConnectionSocketID]->ConnectionSocketID != -1)
+		Con->Disconnect(this->Sockets[socketID]->ConnectionSocketID);
+	
 	return 1;
+}
+
+FString UMechaComponent::DisconnectAll()
+{
+	if (this->Sockets.Num() == 0) return "empty";
+
+	FString status;
+	int32 id = 0;
+	for (UMechaSocket* skt : Sockets) {
+		status += FString().FromInt(Disconnect(id++));
+	}
+
+	return status;
 }

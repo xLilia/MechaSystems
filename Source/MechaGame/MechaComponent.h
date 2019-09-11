@@ -43,5 +43,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
 		int32 Disconnect(int32 socketID);
 
+	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
+		FString DisconnectAll();
+
 
 };
