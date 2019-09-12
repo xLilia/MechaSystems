@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "VerticalCamera.h"
+#define D(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT(x));}
 
 // Sets default values
 AVerticalCamera::AVerticalCamera()
@@ -128,11 +128,41 @@ UMechaSocket* AVerticalCamera::ScrollMechaComponentSocket(int32 num)
 
 int32 AVerticalCamera::InstallComponentAtSocket(UMechaComponent* newComponent, UMechaSocket* ComponentSocket)
 {
-	TArray<UMechaComponent*> mechaComp;
-	ComponentSocket->GetOwner()->GetComponents(mechaComp);
-	if (mechaComp.Num() != 1) return -2;
-	UMechaComponent* Component = mechaComp[0];
-	return Component->Connect(newComponent, ComponentSocket->ComponentSocketID, 0); //FLIP componentSide otherSktID
+	TArray<UMechaComponent*> mechaComps;
+	ComponentSocket->GetOwner()->GetComponents(mechaComps,true);
+	if (mechaComps[0] == nullptr) return -2;
+	UMechaComponent* ParentComponent = mechaComps[0];
+	return newComponent->Connect(ParentComponent, 0, ComponentSocket->ComponentSocketID); //FLIP componentSide otherSktID
+}
+
+void AVerticalCamera::DestroyMechaComponent(UMechaComponent* MechaComponent)
+{
+	if (SelectedMecha == nullptr) return;
+	if (MechaComponent == nullptr) return;
+	MechaComponent->DisconnectAll();
+	MechaComponent->GetOwner()->Destroy();
+	SelectedMecha->UpdateMechaComponents();
+}
+
+void AVerticalCamera::SpawnMechaComponentAtSocket(const TSubclassOf<class AActor> MechaComponent, UMechaSocket* Socket)
+{
+	if (SelectedMecha == nullptr) return;
+	if (Socket == nullptr) return;
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.bNoFail = true;
+	SpawnParams.Owner = SelectedMecha;
+	SpawnParams.Instigator = SelectedMecha;
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepWorld,false);
+
+	TArray<UMechaComponent*> MechaComp;
+	AActor* MechaComponentOwner = GetWorld()->SpawnActor<AActor>(MechaComponent, Socket->GetOwner()->GetActorTransform(), SpawnParams);
+	MechaComponentOwner->GetComponents(MechaComp,true);
+	MechaComponentOwner->AttachToActor(Socket->GetOwner(), AttachmentRules);
+	
+	if (MechaComp[0] == nullptr)
+	InstallComponentAtSocket(MechaComp[0], Socket);
+	
+	SelectedMecha->UpdateMechaComponents();
 }
 
 

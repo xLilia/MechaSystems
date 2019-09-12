@@ -15,7 +15,7 @@ AMechaBody::AMechaBody()
 void AMechaBody::BeginPlay()
 {
 	Super::BeginPlay();
-
+	UpdateMechaComponents();
 }
 
 // Called every frame
@@ -40,7 +40,7 @@ TArray<UMechaComponent*> AMechaBody::UpdateMechaComponents()
 	for (AActor* Comps : ChildCompList)
 	{
 		TArray<UMechaComponent*> CompsList;
-		Comps->GetComponents(CompsList);
+		Comps->GetComponents(CompsList,true);
 		if (CompsList.Num() > 0) {
 			for (UMechaComponent* MechaComp : CompsList) {
 				MechaComponentsList.Add(MechaComp);

@@ -41,7 +41,7 @@ public:
 		int32 Connect(UMechaComponent* Other, int32 ThisSocketID, int32 OtherSocketID);
 
 	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
-		int32 Disconnect(int32 socketID);
+		int32 Disconnect(int32 socketID, bool OtherDisconnected);
 
 	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
 		FString DisconnectAll();

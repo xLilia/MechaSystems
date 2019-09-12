@@ -18,7 +18,7 @@ UMechaComponent::UMechaComponent()
 void UMechaComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	UpdateSockets();
 	// ...
 	
 }
@@ -39,7 +39,7 @@ TArray<class UMechaSocket*> UMechaComponent::UpdateSockets()
 	int32 sID = 0;
 	for (UMechaSocket* Socket : Sockets)
 	{
-		Socket->ComponentSocketID = sID;
+		Socket->ComponentSocketID = sID++;
 		Socket->GraphLayerOffset = Socket->GraphLayer + this->GraphLayer;
 	}
 	return Sockets;
@@ -58,16 +58,18 @@ int32 UMechaComponent::Connect(UMechaComponent* Other, int32 ThisSocketID, int32
 	return 0;
 }
 
-int32 UMechaComponent::Disconnect(int32 socketID)
+int32 UMechaComponent::Disconnect(int32 socketID, bool OtherDisconnected = false)
 {
 	if (this->Sockets.Num() == 0) return 0;
-	if (this->Sockets[socketID]->Connection == nullptr) return -1;
-	
+	if (this->Sockets[socketID] == nullptr) return -1;
+	if (this->Sockets[socketID]->Connection == nullptr) return -2;
 	UMechaComponent* Con = this->Sockets[socketID]->Connection;
-	this->Sockets[socketID]->Connection = nullptr;
+	if (!OtherDisconnected) {
+		Con->Disconnect(this->Sockets[socketID]->ConnectionSocketID, true);
+	}
 	this->Sockets[socketID]->ConnectionSocketID = -1;
-	if (this->Sockets[socketID]->Connection->Sockets[this->Sockets[socketID]->ConnectionSocketID]->ConnectionSocketID != -1)
-		Con->Disconnect(this->Sockets[socketID]->ConnectionSocketID);
+	this->Sockets[socketID]->Connection = nullptr;
+	
 	
 	return 1;
 }

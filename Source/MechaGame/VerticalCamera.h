@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Engine/World.h"
+#include "Engine/EngineTypes.h"
 #include "MechaBody.h"
 #include "MechaComponent.h"
 #include "VerticalCamera.generated.h"
@@ -77,5 +79,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
 		int32 InstallComponentAtSocket(class UMechaComponent* newComponent, class UMechaSocket* ComponentSocket);
+
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
+		void DestroyMechaComponent(class UMechaComponent* MechaComponent);
+
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
+		void SpawnMechaComponentAtSocket(const TSubclassOf<class AActor> MechaComponent, class UMechaSocket* Socket);
 
 };
