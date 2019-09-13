@@ -32,4 +32,5 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MechaBody/Components")
 		TArray<class UMechaComponent*> UpdateMechaComponents();
+
 };

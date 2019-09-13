@@ -155,13 +155,15 @@ void AVerticalCamera::SpawnMechaComponentAtSocket(const TSubclassOf<class AActor
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepWorld,false);
 
 	TArray<UMechaComponent*> MechaComp;
+	TArray<AActor*> ChildComps;
 	AActor* MechaComponentOwner = GetWorld()->SpawnActor<AActor>(MechaComponent, Socket->GetOwner()->GetActorTransform(), SpawnParams);
-	MechaComponentOwner->GetComponents(MechaComp,true);
 	MechaComponentOwner->AttachToActor(Socket->GetOwner(), AttachmentRules);
+	MechaComponentOwner->GetComponents(MechaComp, true);
+
+	MechaComponentOwner->GetAttachedActors(ChildComps);
 	
-	if (MechaComp[0] == nullptr)
-	InstallComponentAtSocket(MechaComp[0], Socket);
-	
+	if (MechaComp[0] != nullptr) InstallComponentAtSocket(MechaComp[0], Socket);
+
 	SelectedMecha->UpdateMechaComponents();
 }
 
