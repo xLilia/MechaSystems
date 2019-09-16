@@ -95,6 +95,9 @@ UMechaComponent* AVerticalCamera::SelectMechaComponentID(int32 ID)
 {
 	if (SelectedMecha == nullptr || SelectedMecha->MechaComponentsList.Num() == 0) return nullptr;
 	UMechaComponent* MC = SelectedMecha->MechaComponentsList[ID];
+	UMechaComponent* OldMC = SelectedMecha->MechaComponentsList[SelectedMechaComponentID];
+	OldMC->isComponentSelected = false;
+	MC->isComponentSelected = true;
 	SetTarget(MC->GetOwner());
 	SelectedMechaComponentID = ID;
 	SelectedMechaComponentSocketID = 0;
@@ -142,6 +145,8 @@ void AVerticalCamera::DestroyMechaComponent(UMechaComponent* MechaComponent)
 	MechaComponent->DisconnectAll();
 	MechaComponent->GetOwner()->Destroy();
 	SelectedMecha->UpdateMechaComponents();
+	SelectedMechaComponentID = SelectedMechaComponentID % SelectedMecha->MechaComponentsList.Num();
+	SelectedMechaComponentSocketID = SelectedMechaComponentSocketID % SelectedMecha->MechaComponentsList[SelectedMechaComponentID]->Sockets.Num();
 }
 
 void AVerticalCamera::SpawnMechaComponentAtSocket(const TSubclassOf<class AActor> MechaComponent, UMechaSocket* Socket)
@@ -156,7 +161,7 @@ void AVerticalCamera::SpawnMechaComponentAtSocket(const TSubclassOf<class AActor
 
 	TArray<UMechaComponent*> MechaComp;
 	TArray<AActor*> ChildComps;
-	AActor* MechaComponentOwner = GetWorld()->SpawnActor<AActor>(MechaComponent, Socket->GetOwner()->GetActorTransform(), SpawnParams);
+	AActor* MechaComponentOwner = GetWorld()->SpawnActor<AActor>(MechaComponent, Socket->GetComponentTransform(), SpawnParams);
 	MechaComponentOwner->AttachToActor(Socket->GetOwner(), AttachmentRules);
 	MechaComponentOwner->GetComponents(MechaComp, true);
 

@@ -70,9 +70,6 @@ void UCustomMouseInterface::LockMousePosToCoord(APlayerController * PC)
 
 void UCustomMouseInterface::UnlockMousePos(APlayerController * PC)
 {
-	if (MouseLocked) {
 		MouseLocked = false;
-	}
-	
 }
 

@@ -22,10 +22,11 @@ public:
 		TArray<class UMechaSocket*> Sockets;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "MechaComponent/MechaGraph")
-		int32 GraphLayer = 0;
+		int32 GraphLayer;
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "MechaComponent")
-		bool isSelected = false;
+		bool isComponentSelected;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
