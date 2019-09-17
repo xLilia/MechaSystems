@@ -131,44 +131,70 @@ UMechaSocket* AVerticalCamera::ScrollMechaComponentSocket(int32 num)
 
 int32 AVerticalCamera::InstallComponentAtSocket(UMechaComponent* newComponent, UMechaSocket* ComponentSocket)
 {
-	TArray<UMechaComponent*> mechaComps;
-	ComponentSocket->GetOwner()->GetComponents(mechaComps,true);
-	if (mechaComps[0] == nullptr) return -2;
-	UMechaComponent* ParentComponent = mechaComps[0];
-	return newComponent->Connect(ParentComponent, 0, ComponentSocket->ComponentSocketID); //FLIP componentSide otherSktID
+	return newComponent->ConnectToSocket(ComponentSocket); //FLIP componentSide otherSktSIDEtag	
+}
+
+TArray<AActor*>& AVerticalCamera::GetMechaComponentActorTreeFrom(UMechaComponent* MechaComponent, TArray<AActor*> TreeList)
+{
+	if (SelectedMecha == nullptr)
+	if (MechaComponent == nullptr)
+	if (MechaComponent->Sockets.Num() > 0) {
+		for (UMechaSocket* skt : MechaComponent->Sockets) {
+			if (skt->Connection != nullptr) {
+				TreeList.Add(skt->Connection->GetOwner());
+				GetMechaComponentActorTreeFrom(skt->Connection, TreeList);
+			}
+		}
+	}
+	return TreeList;
 }
 
 void AVerticalCamera::DestroyMechaComponent(UMechaComponent* MechaComponent)
 {
 	if (SelectedMecha == nullptr) return;
 	if (MechaComponent == nullptr) return;
-	MechaComponent->DisconnectAll();
+	if (MechaComponent->Sockets.Num() > 0) {
+		for (UMechaSocket* skt : MechaComponent->Sockets) {
+			if (skt->Connection != nullptr) {
+				DestroyMechaComponent(skt->Connection);
+				skt->Connection = nullptr;
+			}
+		}
+	}
+	if (MechaComponent->ConnectionSocket != nullptr) MechaComponent->ConnectionSocket->Connection = nullptr;
 	MechaComponent->GetOwner()->Destroy();
 	SelectedMecha->UpdateMechaComponents();
-	SelectedMechaComponentID = SelectedMechaComponentID % SelectedMecha->MechaComponentsList.Num();
-	SelectedMechaComponentSocketID = SelectedMechaComponentSocketID % SelectedMecha->MechaComponentsList[SelectedMechaComponentID]->Sockets.Num();
+	
+	//Clamp selectedComponents
+	SelectedMechaComponentID = FMath::Clamp(SelectedMechaComponentID, 0, SelectedMecha->MechaComponentsList.Num() - 1);
+	SelectedMechaComponentID = FMath::Clamp(SelectedMechaComponentID, 0, SelectedMechaComponentID);
+	if (SelectedMecha->MechaComponentsList.Num() == 0) return;
+	SelectedMechaComponentSocketID = FMath::Clamp(SelectedMechaComponentSocketID, 0, SelectedMecha->MechaComponentsList[SelectedMechaComponentID]->Sockets.Num() - 1);
+	SelectedMechaComponentSocketID = FMath::Clamp(SelectedMechaComponentSocketID, 0, SelectedMechaComponentSocketID);
 }
 
 void AVerticalCamera::SpawnMechaComponentAtSocket(const TSubclassOf<class AActor> MechaComponent, UMechaSocket* Socket)
 {
 	if (SelectedMecha == nullptr) return;
 	if (Socket == nullptr) return;
+
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.bNoFail = true;
 	SpawnParams.Owner = SelectedMecha;
 	SpawnParams.Instigator = SelectedMecha;
-	FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepWorld,false);
-
-	TArray<UMechaComponent*> MechaComp;
-	TArray<AActor*> ChildComps;
 	AActor* MechaComponentOwner = GetWorld()->SpawnActor<AActor>(MechaComponent, Socket->GetComponentTransform(), SpawnParams);
-	MechaComponentOwner->AttachToActor(Socket->GetOwner(), AttachmentRules);
-	MechaComponentOwner->GetComponents(MechaComp, true);
-
-	MechaComponentOwner->GetAttachedActors(ChildComps);
 	
-	if (MechaComp[0] != nullptr) InstallComponentAtSocket(MechaComp[0], Socket);
+	TArray<UMechaComponent*> MechaComp;
+	MechaComponentOwner->GetComponents(MechaComp, true);
+	
+	if (MechaComp[0] != nullptr) 
+		if (InstallComponentAtSocket(MechaComp[0], Socket) != 1) {
+			MechaComponentOwner->Destroy();
+			return;
+		}
 
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepWorld, false);
+	MechaComponentOwner->AttachToActor(Socket->GetOwner(), AttachmentRules);
 	SelectedMecha->UpdateMechaComponents();
 }
 

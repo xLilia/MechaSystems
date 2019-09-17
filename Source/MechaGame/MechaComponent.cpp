@@ -46,44 +46,56 @@ TArray<class UMechaSocket*> UMechaComponent::UpdateSockets()
 	return Sockets;
 }
 
-int32 UMechaComponent::Connect(UMechaComponent* Other, int32 ThisSocketID, int32 OtherSocketID)
+int32 UMechaComponent::ConnectToSocket(UMechaSocket* Socket)
 {
-	if (Other == nullptr) return -1;
-	if (this->Sockets[ThisSocketID]->Type == Other->Sockets[OtherSocketID]->Type) {
-		Other->Sockets[OtherSocketID]->Connection = this;
-		Other->Sockets[OtherSocketID]->ConnectionSocketID = ThisSocketID;
-		this->Sockets[ThisSocketID]->Connection = Other;
-		this->Sockets[ThisSocketID]->ConnectionSocketID = OtherSocketID;
+	if (Socket == nullptr) return -1;
+	if (Socket->Connection == nullptr)
+	if (this->Type == Socket->Type || Socket->Type.Len() == 0) { //Connection Conditions
+		Socket->Connection = this;
+		this->ConnectionSocket = Socket;
 		return 1;
 	}
 	return 0;
 }
 
-int32 UMechaComponent::Disconnect(int32 socketID, bool OtherDisconnected = false)
-{
-	if (this->Sockets.Num() == 0) return 0;
-	if (this->Sockets[socketID] == nullptr) return -1;
-	if (this->Sockets[socketID]->Connection == nullptr) return -2;
-	UMechaComponent* Con = this->Sockets[socketID]->Connection;
-	if (!OtherDisconnected) {
-		Con->Disconnect(this->Sockets[socketID]->ConnectionSocketID, true);
-	}
-	this->Sockets[socketID]->ConnectionSocketID = -1;
-	this->Sockets[socketID]->Connection = nullptr;
-	
-	
-	return 1;
-}
+//int32 UMechaComponent::Connect(UMechaComponent* Other, int32 ThisSocketID, int32 OtherSocketID)
+//{
+//	if (Other == nullptr) return -1;
+//	if (this->Sockets[ThisSocketID]->Type == Other->Sockets[OtherSocketID]->Type) {
+//		Other->Sockets[OtherSocketID]->Connection = this;
+//		Other->Sockets[OtherSocketID]->ConnectionSocketID = ThisSocketID;
+//		this->Sockets[ThisSocketID]->Connection = Other;
+//		this->Sockets[ThisSocketID]->ConnectionSocketID = OtherSocketID;
+//		return 1;
+//	}
+//	return 0;
+//}
+//
+//int32 UMechaComponent::Disconnect(int32 socketID, bool OtherDisconnected = false)
+//{
+//	if (this->Sockets.Num() == 0) return 0;
+//	if (this->Sockets[socketID] == nullptr) return -1;
+//	if (this->Sockets[socketID]->Connection == nullptr) return -2;
+//	UMechaComponent* Con = this->Sockets[socketID]->Connection;
+//	if (!OtherDisconnected) {
+//		Con->Disconnect(this->Sockets[socketID]->ConnectionSocketID, true);
+//	}
+//	this->Sockets[socketID]->ConnectionSocketID = -1;
+//	this->Sockets[socketID]->Connection = nullptr;
+//	
+//	
+//	return 1;
+//}
 
-FString UMechaComponent::DisconnectAll()
-{
-	if (this->Sockets.Num() == 0) return "empty";
-
-	FString status;
-	int32 id = 0;
-	for (UMechaSocket* skt : Sockets) {
-		status += FString().FromInt(Disconnect(id++));
-	}
-
-	return status;
-}
+//FString UMechaComponent::DisconnectAll()
+//{
+//	if (this->Sockets.Num() == 0) return "empty";
+//
+//	FString status;
+//	int32 id = 0;
+//	for (UMechaSocket* skt : Sockets) {
+//		status += FString().FromInt(Disconnect(id++));
+//	}
+//
+//	return status;
+//}

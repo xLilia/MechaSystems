@@ -18,7 +18,7 @@ public:
 	UMechaSocket();
 	UMechaSocket(FString Type);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MechaSocket")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MechaSocket")
 		FString Type;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="MechaSocket")

@@ -81,6 +81,9 @@ public:
 		int32 InstallComponentAtSocket(class UMechaComponent* newComponent, class UMechaSocket* ComponentSocket);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
+		TArray<AActor*>& GetMechaComponentActorTreeFrom(UMechaComponent* MechaComponent, TArray<AActor*> TreeList);
+
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
 		void DestroyMechaComponent(class UMechaComponent* MechaComponent);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")

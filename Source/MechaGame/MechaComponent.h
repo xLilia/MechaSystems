@@ -20,6 +20,12 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "MechaComponent")
 		TArray<class UMechaSocket*> Sockets;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "MechaComponent")
+		class UMechaSocket* ConnectionSocket;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "MechaComponent")
+		FString Type;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "MechaComponent/MechaGraph")
 		int32 GraphLayer;
@@ -38,14 +44,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
 		TArray<class UMechaSocket*> UpdateSockets();
 
-	UFUNCTION(BlueprintCallable, Category="MechaComponent")
-		int32 Connect(UMechaComponent* Other, int32 ThisSocketID, int32 OtherSocketID);
-
 	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
-		int32 Disconnect(int32 socketID, bool OtherDisconnected);
+		int32 ConnectToSocket(UMechaSocket* Socket);
 
-	UFUNCTION(BlueprintCallable, Category = "MechaComponent")
-		FString DisconnectAll();
+
+
+	//UFUNCTION(BlueprintCallable, Category="MechaComponent")
+	//	int32 Connect(UMechaComponent* Other, int32 ThisSocketID, int32 OtherSocketID);
+	//
+	//UFUNCTION(BlueprintCallable, Category = "MechaComponent")
+	//	int32 Disconnect(int32 socketID, bool OtherDisconnected);
+	//
+	//UFUNCTION(BlueprintCallable, Category = "MechaComponent")
+	//	FString DisconnectAll();
 
 
 };
