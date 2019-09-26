@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "DrawDebugHelpers.h"
+#include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
 #include "MechaBody.h"
@@ -69,6 +71,9 @@ public:
 		class UMechaComponent* SelectMechaComponentID(int32 ID);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
+		class UMechaComponent* SelectMechaComponentClick();
+
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
 		class UMechaComponent* ScrollMechaComponent(int32 num);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
@@ -81,7 +86,7 @@ public:
 		int32 InstallComponentAtSocket(class UMechaComponent* newComponent, class UMechaSocket* ComponentSocket);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
-		TArray<AActor*>& GetMechaComponentActorTreeFrom(UMechaComponent* MechaComponent, TArray<AActor*> TreeList);
+		TArray<AActor*>& GetMechaComponentActorTreeFrom(UMechaComponent* MechaComponent, TArray<AActor*>& TreeList);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
 		void DestroyMechaComponent(class UMechaComponent* MechaComponent);

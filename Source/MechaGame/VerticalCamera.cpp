@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "VerticalCamera.h"
-#define D(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT(x));}
 
 // Sets default values
 AVerticalCamera::AVerticalCamera()
@@ -104,6 +103,28 @@ UMechaComponent* AVerticalCamera::SelectMechaComponentID(int32 ID)
 	return MC;
 }
 
+UMechaComponent* AVerticalCamera::SelectMechaComponentClick()
+{
+	if (SelectedMecha == nullptr || SelectedMecha->MechaComponentsList.Num() == 0) return nullptr;
+	FVector WorldPos, WorldDir;
+	if (GetWorld()->GetFirstPlayerController()->DeprojectMousePositionToWorld(WorldPos, WorldDir)) {
+		FHitResult hit;
+		//DrawDebugLine(GetWorld(), WorldPos,WorldPos+WorldDir*1000, FColor::Red,true,-1,(uint8)'\000',1);
+		if (GetWorld()->LineTraceSingleByChannel(hit, WorldPos, WorldPos + WorldDir * 1000, ECollisionChannel::ECC_WorldDynamic)) {
+			if (hit.bBlockingHit) {
+				//DrawDebugSphere(GetWorld(), hit.ImpactPoint, 5, 6, FColor::Green, false, -1, (uint8)'\000', 1);
+				TArray<UMechaComponent*> MCc;
+				hit.GetActor()->GetComponents(MCc, true);
+				if (MCc.Num() > 0) {
+					return SelectMechaComponentID(SelectedMecha->MechaComponentsList.Find(MCc[0]));
+				}
+			}
+			
+		}
+	}
+	return SelectMechaComponentID(0);
+}
+
 UMechaComponent* AVerticalCamera::ScrollMechaComponent(int32 num)
 {
 	if (SelectedMecha == nullptr || SelectedMecha->MechaComponentsList.Num() == 0) return nullptr;
@@ -134,7 +155,7 @@ int32 AVerticalCamera::InstallComponentAtSocket(UMechaComponent* newComponent, U
 	return newComponent->ConnectToSocket(ComponentSocket); //FLIP componentSide otherSktSIDEtag	
 }
 
-TArray<AActor*>& AVerticalCamera::GetMechaComponentActorTreeFrom(UMechaComponent* MechaComponent, TArray<AActor*> TreeList)
+TArray<AActor*>& AVerticalCamera::GetMechaComponentActorTreeFrom(UMechaComponent* MechaComponent, TArray<AActor*>& TreeList)
 {
 	if (SelectedMecha == nullptr)
 	if (MechaComponent == nullptr)
@@ -151,26 +172,25 @@ TArray<AActor*>& AVerticalCamera::GetMechaComponentActorTreeFrom(UMechaComponent
 
 void AVerticalCamera::DestroyMechaComponent(UMechaComponent* MechaComponent)
 {
-	if (SelectedMecha == nullptr) return;
-	if (MechaComponent == nullptr) return;
-	if (MechaComponent->Sockets.Num() > 0) {
-		for (UMechaSocket* skt : MechaComponent->Sockets) {
-			if (skt->Connection != nullptr) {
-				DestroyMechaComponent(skt->Connection);
-				skt->Connection = nullptr;
-			}
-		}
-	}
+
+	TArray<AActor*> Tree;
+	GetMechaComponentActorTreeFrom(MechaComponent, Tree);
+
+	if (Tree.Num() > 0) for (AActor* A : Tree) { if(A!=Tree[0])A->Destroy();}
+
 	if (MechaComponent->ConnectionSocket != nullptr) MechaComponent->ConnectionSocket->Connection = nullptr;
 	MechaComponent->GetOwner()->Destroy();
 	SelectedMecha->UpdateMechaComponents();
 	
-	//Clamp selectedComponents
-	SelectedMechaComponentID = FMath::Clamp(SelectedMechaComponentID, 0, SelectedMecha->MechaComponentsList.Num() - 1);
-	SelectedMechaComponentID = FMath::Clamp(SelectedMechaComponentID, 0, SelectedMechaComponentID);
 	if (SelectedMecha->MechaComponentsList.Num() == 0) return;
-	SelectedMechaComponentSocketID = FMath::Clamp(SelectedMechaComponentSocketID, 0, SelectedMecha->MechaComponentsList[SelectedMechaComponentID]->Sockets.Num() - 1);
-	SelectedMechaComponentSocketID = FMath::Clamp(SelectedMechaComponentSocketID, 0, SelectedMechaComponentSocketID);
+	SelectedMechaComponentID = 0;
+	SelectedMechaComponentSocketID = 0;
+	//Clamp selectedComponents
+	//SelectedMechaComponentID = FMath::Clamp(SelectedMechaComponentID, 0, SelectedMecha->MechaComponentsList.Num() - 1);
+	//SelectedMechaComponentID = FMath::Clamp(SelectedMechaComponentID, 0, SelectedMechaComponentID);
+	//if (SelectedMecha->MechaComponentsList.Num() == 0) return;
+	//SelectedMechaComponentSocketID = FMath::Clamp(SelectedMechaComponentSocketID, 0, SelectedMecha->MechaComponentsList[SelectedMechaComponentID]->Sockets.Num() - 1);
+	//SelectedMechaComponentSocketID = FMath::Clamp(SelectedMechaComponentSocketID, 0, SelectedMechaComponentSocketID);
 }
 
 void AVerticalCamera::SpawnMechaComponentAtSocket(const TSubclassOf<class AActor> MechaComponent, UMechaSocket* Socket)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
+#include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "MechaComponent.h"
 #include "MechaSocket.generated.h"
 
@@ -16,7 +17,6 @@ class MECHAGAME_API UMechaSocket : public USceneComponent
 public:	
 	// Sets default values for this component's properties
 	UMechaSocket();
-	UMechaSocket(FString Type);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MechaSocket")
 		FString Type;
@@ -46,6 +46,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
+
 
 };

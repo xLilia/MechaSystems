@@ -14,10 +14,6 @@ UMechaSocket::UMechaSocket()
 }
 
 
-UMechaSocket::UMechaSocket(FString Type) : Type(Type)
-{
-
-}
 
 // Called when the game starts
 void UMechaSocket::BeginPlay()
