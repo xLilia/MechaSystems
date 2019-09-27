@@ -23,7 +23,7 @@ public:
 	// Sets default values for this pawn's properties
 	AVerticalCamera();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="VerticalCamera/Edit")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "VerticalCamera/Edit")
 		class AMechaBody* SelectedMecha;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "VerticalCamera/Edit")
@@ -36,14 +36,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable, Category="VerticalCamera/Movement")
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Movement")
 		void MoveZ(float val, float mult);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Movement")
@@ -57,7 +57,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Movement")
 		class AActor* SetTarget(AActor* Target);
-	
+
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Movement")
 		void SetTargetByPos(FVector Target);
 
@@ -71,10 +71,10 @@ public:
 		class UMechaComponent* SelectMechaComponentID(int32 ID);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
-		class UMechaComponent* SelectMechaComponentClick();
+		class UMechaComponent* ScrollMechaComponent(int32 num);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
-		class UMechaComponent* ScrollMechaComponent(int32 num);
+		class UActorComponent* SelectMechaComponentSocketClick();
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
 		class UMechaSocket* SelectMechaComponentSocketID(int32 num);
@@ -93,5 +93,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
 		void SpawnMechaComponentAtSocket(const TSubclassOf<class AActor> MechaComponent, class UMechaSocket* Socket);
+
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
+		void SetSocketsVisiblity(class UMechaComponent* MechaComponent, bool Visibility);
+
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
+		void SetAllSocketsVisiblity(bool Visibility);
 
 };
