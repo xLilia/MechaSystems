@@ -38,7 +38,10 @@ TArray<UMechaComponent*> AMechaBody::UpdateMechaComponents()
 	for (AActor* Ch : Children) {
 		TArray<UMechaComponent*> CompsList;
 		Ch->GetComponents(CompsList, false);
-		if (CompsList[0] != nullptr)MechaComponentsList.Add(CompsList[0]);
+		if (CompsList[0] != nullptr) {
+			CompsList[0]->UpdateSockets();
+			MechaComponentsList.Add(CompsList[0]);
+		}
 	}
 	return MechaComponentsList;
 }

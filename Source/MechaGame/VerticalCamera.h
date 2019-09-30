@@ -71,6 +71,9 @@ public:
 		class UMechaComponent* SelectMechaComponentID(int32 ID);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
+		class UMechaComponent* GetMechaComponentID(int32 ID);
+
+	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
 		class UMechaComponent* ScrollMechaComponent(int32 num);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
@@ -92,7 +95,7 @@ public:
 		void DestroyMechaComponent(class UMechaComponent* MechaComponent);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
-		void SpawnMechaComponentAtSocket(const TSubclassOf<class AActor> MechaComponent, class UMechaSocket* Socket);
+		AActor* SpawnMechaComponentAtSocket(const TSubclassOf<class AActor> MechaComponent, class UMechaSocket* Socket);
 
 	UFUNCTION(BlueprintCallable, Category = "VerticalCamera/Edit")
 		void SetSocketsVisiblity(class UMechaComponent* MechaComponent, bool Visibility);

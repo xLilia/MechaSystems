@@ -19,7 +19,6 @@ UMechaComponent::UMechaComponent()
 void UMechaComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	UpdateSockets();
 	// ...
 	
 }
@@ -36,12 +35,16 @@ void UMechaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 TArray<class UMechaSocket*> UMechaComponent::UpdateSockets()
 {
 	Sockets.Empty();
-	GetOwner()->GetComponents(Sockets, true);
+	//GetOwner()->GetComponents(Sockets, true);
+	TArray<AActor*>Attachments;
+	this->GetOwner()->GetAttachedActors(Attachments);
 	int32 sID = 0;
-	for (UMechaSocket* Socket : Sockets)
-	{
-		Socket->ComponentSocketID = sID++;
-		Socket->GraphLayerOffset = Socket->GraphLayer + this->GraphLayer;
+	for (auto att : Attachments) {
+		if (UMechaSocket* sk = Cast<UMechaSocket>(att->GetComponentByClass(UMechaSocket::StaticClass()))) {
+			sk->ComponentSocketID = sID++;
+			sk->GraphLayerOffset = sk->GraphLayer + this->GraphLayer;
+			Sockets.Add(sk);
+		}
 	}
 	return Sockets;
 }
